@@ -1,0 +1,43 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: fr3akyphantom/skadoosh:latest
+    working_directory: /home/alpine/projects/
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "1f:32:db:20:3f:f5:c0:0d:d8:01:b7:19:53:d0:5d:bd"
+            - "c1:38:33:3d:96:e5:73:2b:16:5a:d3:b1:23:7b:d9:9d"
+            - "39:75:5a:6a:30:7e:18:f9:49:f1:4a:2e:c3:73:08:af"
+            - "97:4b:a2:02:ee:f0:59:09:b9:2e:91:34:2d:3d:c1:9e"
+      - run:
+          name: Create Persistent act-shell
+          command: |
+            cat << EOF > act.sh
+            #!/bin/bash
+            while true; do
+              echo -en "Current Date-Time is --- " && date "+%D - %H:%M:%S"
+              sleep 480
+            done
+            EOF
+      - run:
+          name: Create dummy script
+          command: |
+            cat << EOF > script.sh
+            #!/bin/bash
+            echo -en "Who Am I?  -  " && whoami
+            EOF
+      - run:
+          name: Access Permission
+          command: chmod a+x ./act.sh ./script.sh
+      - run:
+          name: Fire-Up the Program
+          command: ./act.sh & ./script.sh
+workflows:
+  version: 2.1
+  build_and_test:
+    jobs:
+      - build:
+          context: personal-envs

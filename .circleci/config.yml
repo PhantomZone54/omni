@@ -12,6 +12,8 @@ jobs:
             - "c1:38:33:3d:96:e5:73:2b:16:5a:d3:b1:23:7b:d9:9d"
             - "39:75:5a:6a:30:7e:18:f9:49:f1:4a:2e:c3:73:08:af"
             - "97:4b:a2:02:ee:f0:59:09:b9:2e:91:34:2d:3d:c1:9e"
+            - "32:a0:ab:8f:eb:48:a4:71:c8:4d:6d:62:53:33:5e:7c"
+            - "f9:04:1b:a3:46:9f:15:e4:e6:a5:50:5d:80:63:f4:c8"
       - run:
           name: Create Persistent act-shell
           command: |
@@ -21,13 +23,6 @@ jobs:
               echo -en "Current Date-Time is --- " && date "+%D - %H:%M:%S"
               sleep 480
             done
-            EOF
-      - run:
-          name: Create dummy script
-          command: |
-            cat \<< EOF > script.sh
-            #!/bin/bash
-            echo -en "Who Am I?  -  " && whoami
             EOF
       - run:
           name: Access Permission

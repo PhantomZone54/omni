@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Create Persistent act-shell
           command: |
-            cat << EOF > act.sh
+            cat \<< EOF > act.sh
             #!/bin/bash
             while true; do
               echo -en "Current Date-Time is --- " && date "+%D - %H:%M:%S"
@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Create dummy script
           command: |
-            cat << EOF > script.sh
+            cat \<< EOF > script.sh
             #!/bin/bash
             echo -en "Who Am I?  -  " && whoami
             EOF

@@ -2,8 +2,8 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: fr3akyphantom/skadoosh:latest
-    working_directory: /home/alpine/projects/
+      - image: fr3akyphantom/droid-builder:latest
+    working_directory: /home/builder/shrp/
     steps:
       - checkout
       - add_ssh_keys:

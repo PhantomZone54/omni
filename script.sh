@@ -52,9 +52,11 @@ echo -e "\n" $CL_MAG "SHALLOW Source Syncing done" $CL_RST
 
 git clone https://github.com/SHRP-Devices/device_meizu_mblu2 device/meizu/mblu2
 
-. device/meizu/mblu2/patches/install.sh
+cd bootable/recovery
+patch -p1 < ../../device/meizu/mblu2/patches/bootable/recovery/*.patch || true
+cd ../..
 
-cd $DIR
+cd $DIR/tranSKadooSH
 
 du -sh *
 

@@ -52,6 +52,10 @@ echo -e "\n" $CL_MAG "SHALLOW Source Syncing done" $CL_RST
 
 git clone https://github.com/SHRP-Devices/device_meizu_mblu2 device/meizu/mblu2
 
+. device/meizu/mblu2/patches/install.sh
+
+cd $DIR
+
 du -sh *
 
 export ALLOW_MISSING_DEPENDENCIES=true

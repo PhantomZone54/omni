@@ -30,27 +30,35 @@ if [ -e google-git-cookies ]; then
   rm -rf google-git-cookies
 fi
 
-### Get the script
-wget -q https://gist.github.com/rokibhasansagar/d60c6ea6f61c51a430d16c6f1c638ded/raw/4664f224596cb81a2ae10c90ffdcb6523bff079e/update-omni.sh
-chmod a+x ./update-omni.sh
+echo -e "\n\n" $CL_GRN "Initialize repo Command" $CL_RST
+repo init -q -u https://github.com/SKYHAWK-Recovery-Project/platform_manifest_twrp_omni.git -b 9.0 --depth 1
 
-### Some checks
-cd ~/.ssh && ls -a .
+echo -e "\n" $CL_PFX "Removing Unimportant Darwin-specific Files from syncing" $CL_RST
+cd .repo/manifests
+sed -i '/darwin/d' default.xml
+( find . -type f -name '*.xml' | xargs sed -i '/darwin/d' ) || true
+git commit -a -m "Magic" || true
+cd ../
+sed -i '/darwin/d' manifest.xml
+cd ../
 
-if [ ! -f id_rsa.pub ]; then
-  echo "Add this public key into Gerrit before editing project"
-  ssh-keygen -y -f id_rsa > id_rsa.pub || echo yes | ssh-keygen -y -f id_rsa > id_rsa.pub
-fi
-echo -e "\n\n" && cat id_rsa.pub && echo -e "\n\n"
+CPU_COUNT=$(grep -c ^processor /proc/cpuinfo)
+THREAD_COUNT_SYNC=$(($CPU_COUNT * 8))
+  
+echo -e "\n" $CL_YLW "Syncing it up! Wait for a few minutes..." $CL_RST
+repo sync -c -q --force-sync --no-clone-bundle --optimized-fetch --prune --no-tags -j$THREAD_COUNT_SYNC
 
-cd -
+echo -e "\n" $CL_MAG "SHALLOW Source Syncing done" $CL_RST
 
-### Do This Separately
-# ./aosp-merge.sh
+git clone https://github.com/SHRP-Devices/device_meizu_mblu2 device/meizu/mblu2
 
-# Add ssh known hosts
-ssh-keyscan -H gerrit.omnirom.org >> ~/.ssh/known_hosts || ssh-keyscan -t rsa -H gerrit.omnirom.org:29418 >> ~/.ssh/known_hosts
-ssh -o StrictHostKeyChecking=no rokibhasansagar@gerrit.omnirom.org:29418 || true
+du -sh *
 
-# cd $DIR/tranSKadooSH/vendor/omni/utils
-# ./aosp-push-merge.sh
+export ALLOW_MISSING_DEPENDENCIES=true
+source build/envsetup.sh
+lunch omni_mblu2-userdebug
+
+make -j$(nproc --all) recoveryimage
+
+du -sh out/target/product/mblu2/*
+ls -a out/target/product/mblu2/
